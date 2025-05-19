@@ -1,0 +1,59 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata: 
+  name: autonomous-database.oci-resources.org
+spec:
+  group: oci-resources.org
+  names:
+    kind: AutonomousDatabase
+    plural: AutonomousDatabases
+  versions:
+  - name: v1alpha1
+    served: true
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        required: 
+          - spec
+        type: object
+        properties:
+          spec:
+            type: object
+            required:
+                - namespace
+                - dbName
+                - displayName
+                - workload
+                - licenseModel
+                - adminPasswordSecretRef
+                - compartmentId
+            properties:
+              namespace:
+                type: string
+              compartmentId:
+                type: string
+              dbName:
+                type: string
+              displayName:
+                type: string
+              workload:
+                type: string
+              licenseModel:
+                type: string
+              whitelistedIps:
+                type: array
+                items:
+                  type: string
+              adminPasswordSecretRef:
+                type: object
+                required:
+                  - name
+                  - key
+                  - namespace
+                properties:
+                  name:
+                    type: string
+                  key:
+                    type: string
+                  namespace:
+                    type: string
