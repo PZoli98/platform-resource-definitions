@@ -28,7 +28,7 @@ spec:
         - type: CombineFromComposite
           toFieldPath: "spec.forProvider.env"
           combine:
-            strategy: merge
+            strategy: string
             variables:
               - fromFieldPath: "spec.adminPasswordSecretRef.name"
                 name: name
