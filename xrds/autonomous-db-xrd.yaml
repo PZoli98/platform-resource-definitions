@@ -6,7 +6,7 @@ spec:
   group: oci-resources.org
   names:
     kind: AutonomousDatabase
-    plural: AutonomousDatabases
+    plural: autonomousdatabases
   versions:
   - name: v1alpha1
     served: true
