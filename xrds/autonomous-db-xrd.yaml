@@ -41,9 +41,7 @@ spec:
               licenseModel:
                 type: string
               whitelistedIps:
-                type: array
-                items:
-                  type: string
+                type: string
               adminPasswordSecretRef:
                 type: object
                 required:
