@@ -18,59 +18,51 @@ spec:
           forProvider:
             module: git::https://github.com/PZoli98/terraform-modules.git//autonomous_db?ref=main
             source: Remote
-            env: [] # We'll patch these below
+            env:
+              - name: TF_VAR_admin_password
+                secretKeyRef:
+                  name: secretName
+                  key: secretKey
+                  namespace: secretNamespace
+              - name: TF_VAR_compartment_id
+                value: compartmentId
+              - name: TF_VAR_db_name
+                value: dbName
+              - name: TF_VAR_display_name
+                value: displayName
+              - name: TF_VAR_db_workload
+                value: workload
+              - name: TF_VAR_license_model
+                value: licenseModel
+              - name: TF_VAR_whitelisted_ips
+                value: whitelistedIps
           providerConfigRef:
             name: opentofu-providerconfig
           writeConnectionSecretToRef:
             name: autonomousdb-connection
             namespace: default
       patches:
-        - type: CombineFromComposite
-          toFieldPath: "spec.forProvider.env"
-          combine:
-            strategy: string
-            variables:
-              - fromFieldPath: "spec.adminPasswordSecretRef.name"
-                name: name
-              - fromFieldPath: "spec.adminPasswordSecretRef.key"
-                name: key
-              - fromFieldPath: "spec.adminPasswordSecretRef.namespace"
-                name: namespace
-              - fromFieldPath: "spec.compartmentId"
-                name: compartmentId
-              - fromFieldPath: "spec.dbName"
-                name: dbName
-              - fromFieldPath: "spec.displayName"
-                name: displayName
-              - fromFieldPath: "spec.workload"
-                name: workload
-              - fromFieldPath: "spec.licenseModel"
-                name: licenseModel
-              - fromFieldPath: "spec.whitelistedIps"
-                name: whitelistedIps
-            string:
-              fmt: |
-                [
-                  {
-                    "name": "TF_VAR_admin_password",
-                    "secretKeyRef": {
-                      "name": "%s",
-                      "key": "%s",
-                      "namespace": "%s"
-                    }
-                  },
-                  { "name": "TF_VAR_compartment_id", "value": "%s" },
-                  { "name": "TF_VAR_db_name", "value": "%s" },
-                  { "name": "TF_VAR_display_name", "value": "%s" },
-                  { "name": "TF_VAR_db_workload", "value": "%s" },
-                  { "name": "TF_VAR_license_model", "value": "%s" },
-                  { "name": "TF_VAR_whitelisted_ips", "value": "%s" }
-                ]
-        - type: FromCompositeFieldPath
-          fromFieldPath: "spec.namespace"
-          toFieldPath: "spec.writeConnectionSecretToRef.namespace"
-        - type: FromCompositeFieldPath
-          fromFieldPath: "spec.displayName"
-          toFieldPath: "metadata.name"
+        - fromFieldPath: spec.adminPasswordSecretRef.name
+          toFieldPath: spec.forProvider.env[0].secretKeyRef.name
+        - fromFieldPath: spec.adminPasswordSecretRef.key
+          toFieldPath: spec.forProvider.env[0].secretKeyRef.key
+        - fromFieldPath: spec.adminPasswordSecretRef.namespace
+          toFieldPath: spec.forProvider.env[0].secretKeyRef.namespace
+        - fromFieldPath: spec.compartmentId
+          toFieldPath: spec.forProvider.env[1].value
+        - fromFieldPath: spec.dbName
+          toFieldPath: spec.forProvider.env[2].value
+        - fromFieldPath: spec.displayName
+          toFieldPath: spec.forProvider.env[3].value
+        - fromFieldPath: spec.workload
+          toFieldPath: spec.forProvider.env[4].value
+        - fromFieldPath: spec.licenseModel
+          toFieldPath: spec.forProvider.env[5].value
+        - fromFieldPath: spec.whitelistedIps
+          toFieldPath: spec.forProvider.env[6].value
+        - fromFieldPath: spec.namespace
+          toFieldPath: spec.writeConnectionSecretToRef.namespace
+        - fromFieldPath: spec.displayName
+          toFieldPath: metadata.name
 
 
