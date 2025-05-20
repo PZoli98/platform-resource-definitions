@@ -39,7 +39,7 @@ spec:
           providerConfigRef:
             name: opentofu-providerconfig
           writeConnectionSecretToRef:
-            name: autonomousdb-connection
+            name: autonomousdb-connection-secret
             namespace: default
       patches:
         - fromFieldPath: spec.adminPasswordSecretRef.name
